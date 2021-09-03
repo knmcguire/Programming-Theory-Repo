@@ -6,7 +6,7 @@ public class Drone : MonoBehaviour
 {
 
     protected float massDrone = 0.04f; // in grams
-    [SerializeField] protected float totalFlightTime = 600.0f; // in seconds
+    protected float totalFlightTime = 600.0f; // in seconds
     protected float currentFlightTime; // in seconds
 
     protected float flightHeight = 1.0f; // in meters
@@ -20,6 +20,10 @@ public class Drone : MonoBehaviour
     protected Vector3 hoverStartPos;
 
     protected float hoverOscillationSpeed = 2.0f;
+
+    protected float timeStartHover;
+
+    
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +48,7 @@ public class Drone : MonoBehaviour
                 if(TakeOffCommand(flightHeight))
                 {
                     hoverStartPos = transform.position;
+                    timeStartHover = Time.time;
                     currentState = DroneState.Hover;
                 }
                 break;
@@ -53,7 +58,8 @@ public class Drone : MonoBehaviour
                     currentState = DroneState.Land;
                 break;
             case DroneState.Land:
-                LandCommand();
+                if(LandCommand())
+                    Destroy(gameObject);
                 break;
             default:
                 break;
@@ -74,19 +80,22 @@ public class Drone : MonoBehaviour
 
     protected virtual void HoverCommand()
     {
+        
         Vector3 v = hoverStartPos;
-        v.y += 0.1f * Mathf.Sin(Time.time * hoverOscillationSpeed);
+        v.y += 0.1f * Mathf.Sin((Time.time - timeStartHover) * hoverOscillationSpeed);
         transform.position = v;
     }
 
-    void LandCommand()
+    bool LandCommand()
     {
         CharacterController controller = GetComponent<CharacterController>();
 
         if (transform.position.y > 0.05)
         {
             transform.Translate(Vector3.down * Time.deltaTime * takeOffSpeed);
+            return false;
         }
+        return true;
     }
 
     bool DrainBattery()

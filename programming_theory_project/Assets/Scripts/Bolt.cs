@@ -7,12 +7,14 @@ public class Bolt : Drone
     public Bolt()
     {
         massDrone = 0.06f; // in grams
+        totalFlightTime = 1200.0f;
+
     }
 
     protected override void HoverCommand()
     {
         Vector3 v = hoverStartPos;
-        v.x += 0.1f * Mathf.Sin(Time.time * hoverOscillationSpeed);
+        v.x += 0.1f * Mathf.Sin((Time.time-timeStartHover) * hoverOscillationSpeed);
         transform.position = v;
     }
 }
