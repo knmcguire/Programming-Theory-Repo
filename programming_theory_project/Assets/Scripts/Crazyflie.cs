@@ -7,7 +7,7 @@ public class Crazyflie : Drone
 public Crazyflie()
   {
     massDrone = 0.02f; // in grams
-    totalFlightTime = 600.0f;
+    totalFlightTime = 10.0f;
   }
 
 }

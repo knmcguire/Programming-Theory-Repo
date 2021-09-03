@@ -13,7 +13,7 @@ public class Drone : MonoBehaviour
 
     protected float takeOffSpeed = 0.5f; // in meters/second
 
-    enum DroneState {TakeOff, Hover, Land}
+    enum DroneState {TakeOff, Hover, HoverAroundPlayer, Land}
 
     DroneState currentState;
 
@@ -23,19 +23,21 @@ public class Drone : MonoBehaviour
 
     protected float timeStartHover;
 
-    
+    protected GameObject Player;
 
+    float randomPi;
+     float randomRadius;
+      float randomHeight;
+      float angleHeight;
+    float circleSpeed =3.0f;
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(massDrone);
         currentState = DroneState.TakeOff;
         currentFlightTime = totalFlightTime;
         takeOffSpeed = 0.02f / massDrone;
-        Debug.Log(takeOffSpeed);
         hoverOscillationSpeed = 0.16f/  massDrone;
-        Debug.Log(hoverOscillationSpeed);
-
+        randomizeValues();
     }
 
     // Update is called once per frame
@@ -53,10 +55,15 @@ public class Drone : MonoBehaviour
                 }
                 break;
             case DroneState.Hover:
-                HoverCommand();
+                HoverCommand(hoverStartPos);
                 if (DrainBattery())
                     currentState = DroneState.Land;
                 break;
+            case DroneState.HoverAroundPlayer:
+                HoverCommand(GetCircleAroundPlayerPosition());
+                break;
+
+            
             case DroneState.Land:
                 if(LandCommand())
                     Destroy(gameObject);
@@ -78,10 +85,10 @@ public class Drone : MonoBehaviour
         return true;
     }
 
-    protected virtual void HoverCommand()
+    protected virtual void HoverCommand(Vector3 startPosition)
     {
         
-        Vector3 v = hoverStartPos;
+        Vector3 v = startPosition;
         v.y += 0.1f * Mathf.Sin((Time.time - timeStartHover) * hoverOscillationSpeed);
         transform.position = v;
     }
@@ -107,5 +114,44 @@ public class Drone : MonoBehaviour
             return false;
 
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("collision");
+        if(other.gameObject.CompareTag("Player"))
+        { 
+            Player = other.gameObject;
+            currentState = DroneState.HoverAroundPlayer;
+            //Destroy(gameObject);
+        }
+    }
+
+    public Vector3 RandomMovement()
+    {       float time = Time.timeSinceLevelLoad;
+            float currentPi = randomPi + circleSpeed * time;    
+            float currentPiHeight = angleHeight + circleSpeed * time;
+            float circleX = randomRadius*Mathf.Sin(currentPi);
+            float circleY = randomRadius*Mathf.Cos(currentPi);
+            float height = randomHeight + 0.5f*Mathf.Sin(currentPiHeight);
+            
+
+            return new Vector3(circleX, height ,circleY);
+    }
+
+    public void randomizeValues()
+    {
+        randomPi = Random.Range(0, 2*Mathf.PI); 
+        randomRadius = Random.Range(1.00f, 2.00f);
+        randomHeight = Random.Range(0.5f, 1.0f);
+        angleHeight = Random.Range(0, 2*Mathf.PI);
+    }
+    Vector3 GetCircleAroundPlayerPosition()
+    {
+        Vector3 CirclePosition = RandomMovement();
+        return new Vector3(Player.transform.position.x + CirclePosition.x, Player.transform.position.y + CirclePosition.y, Player.transform.position.z + CirclePosition.z );
+
+    }
+
+    
 
 }

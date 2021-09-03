@@ -11,9 +11,9 @@ public class Bolt : Drone
 
     }
 
-    protected override void HoverCommand()
+    protected override void HoverCommand(Vector3 startPosition)
     {
-        Vector3 v = hoverStartPos;
+        Vector3 v = startPosition;
         v.x += 0.1f * Mathf.Sin((Time.time-timeStartHover) * hoverOscillationSpeed);
         transform.position = v;
     }
