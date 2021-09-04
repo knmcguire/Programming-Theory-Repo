@@ -8,7 +8,7 @@ public class Drone : MonoBehaviour
 
     protected float massDrone = 0.04f; // in grams
     protected float totalFlightTime = 600.0f; // in seconds
-    protected float currentFlightTime; // in seconds
+    public float currentFlightTime {get; protected set;} // in seconds
 
     protected float flightHeight = 1.0f; // in meters
 
@@ -40,7 +40,8 @@ public class Drone : MonoBehaviour
     static int amountOfDrones = 0;
     static int amountOfDronesCollected = 0;
 
-    bool isCollected = false;
+
+    public bool isCollected = false;
     void Start()
     {
         currentState = DroneState.TakeOff;
@@ -89,6 +90,7 @@ public class Drone : MonoBehaviour
                     if(isCollected)
                     {
                         amountOfDronesCollected--;
+                        isCollected = false;
                         MainManager.GetComponent<MainManager>().UpdateAmountOfCollectedDrones(amountOfDronesCollected);
                     }
 
@@ -185,7 +187,12 @@ public class Drone : MonoBehaviour
     {
         if(isCollected)
         {
-            currentFlightTime = totalFlightTime;
+            
+            currentFlightTime += totalFlightTime / (float)amountOfDronesCollected;
+            if(currentFlightTime > totalFlightTime)
+            {
+                currentFlightTime = totalFlightTime;
+            }
         }
     }
 

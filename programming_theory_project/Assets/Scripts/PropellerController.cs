@@ -21,7 +21,7 @@ public class PropellerController : MonoBehaviour
             speed = 5000.0f;
         else
             speed = -5000.0f;
-        transform.Rotate(Vector3.up, 5000.0f * Time.deltaTime);
+        transform.Rotate(Vector3.up, speed * Time.deltaTime);
 
     }
 }
