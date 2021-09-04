@@ -5,6 +5,8 @@ using UnityEngine;
 public class Battery : MonoBehaviour
 {
 
+
+
     private float turnSpeed = 50.0f;
     // Start is called before the first frame update
     void Start()
@@ -20,11 +22,7 @@ public class Battery : MonoBehaviour
 
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.CompareTag("Player"))
-        { 
-            Destroy(gameObject);
-        }
-    }
+
+
+    
 }

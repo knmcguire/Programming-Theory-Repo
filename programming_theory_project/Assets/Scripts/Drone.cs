@@ -52,6 +52,8 @@ public class Drone : MonoBehaviour
         MainManager = GameObject.Find("MainManager");
 
         MainManager.GetComponent<MainManager>().UpdateAmountOfDrones(amountOfDrones);
+        FindObjectOfType<PlayerController>().batteryCatchEvent += GotBattery;
+
     }
 
     // Update is called once per frame
@@ -168,7 +170,7 @@ public class Drone : MonoBehaviour
     public void randomizeValues()
     {
         randomPi = Random.Range(0, 2*Mathf.PI); 
-        randomRadius = Random.Range(1.00f, 2.00f);
+        randomRadius = Random.Range(0.5f, 1.0f);
         randomHeight = Random.Range(0.5f, 1.0f);
         angleHeight = Random.Range(0, 2*Mathf.PI);
     }
@@ -177,6 +179,14 @@ public class Drone : MonoBehaviour
         Vector3 CirclePosition = RandomMovement();
         return new Vector3(Player.transform.position.x + CirclePosition.x, Player.transform.position.y + CirclePosition.y, Player.transform.position.z + CirclePosition.z );
 
+    }
+
+    void GotBattery()
+    {
+        if(isCollected)
+        {
+            currentFlightTime = totalFlightTime;
+        }
     }
 
     
