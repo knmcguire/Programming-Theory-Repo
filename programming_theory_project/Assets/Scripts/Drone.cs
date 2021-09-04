@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Drone : MonoBehaviour
 {
@@ -25,12 +26,21 @@ public class Drone : MonoBehaviour
 
     protected GameObject Player;
 
+    // for swarming
     float randomPi;
-     float randomRadius;
-      float randomHeight;
-      float angleHeight;
+    float randomRadius;
+    float randomHeight;
+    float angleHeight;
     float circleSpeed =3.0f;
     // Start is called before the first frame update
+
+    GameObject MainManager;
+    
+
+    static int amountOfDrones = 0;
+    static int amountOfDronesCollected = 0;
+
+    bool isCollected = false;
     void Start()
     {
         currentState = DroneState.TakeOff;
@@ -38,6 +48,10 @@ public class Drone : MonoBehaviour
         takeOffSpeed = 0.02f / massDrone;
         hoverOscillationSpeed = 0.16f/  massDrone;
         randomizeValues();
+        amountOfDrones++;
+        MainManager = GameObject.Find("MainManager");
+
+        MainManager.GetComponent<MainManager>().UpdateAmountOfDrones(amountOfDrones);
     }
 
     // Update is called once per frame
@@ -61,12 +75,23 @@ public class Drone : MonoBehaviour
                 break;
             case DroneState.HoverAroundPlayer:
                 HoverCommand(GetCircleAroundPlayerPosition());
+                if (DrainBattery())
+                    currentState = DroneState.Land;
                 break;
-
-            
             case DroneState.Land:
                 if(LandCommand())
+                {
+                    
+                    amountOfDrones--;
+                    MainManager.GetComponent<MainManager>().UpdateAmountOfDrones(amountOfDrones);
+                    if(isCollected)
+                    {
+                        amountOfDronesCollected--;
+                        MainManager.GetComponent<MainManager>().UpdateAmountOfCollectedDrones(amountOfDronesCollected);
+                    }
+
                     Destroy(gameObject);
+                }
                 break;
             default:
                 break;
@@ -117,12 +142,14 @@ public class Drone : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("collision");
         if(other.gameObject.CompareTag("Player"))
         { 
             Player = other.gameObject;
             currentState = DroneState.HoverAroundPlayer;
-            //Destroy(gameObject);
+            amountOfDronesCollected++;
+            isCollected = true;
+            MainManager.GetComponent<MainManager>().UpdateAmountOfCollectedDrones(amountOfDronesCollected);
+
         }
     }
 
