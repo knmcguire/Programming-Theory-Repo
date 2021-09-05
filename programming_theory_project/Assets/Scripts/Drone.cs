@@ -146,7 +146,7 @@ public class Drone : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.CompareTag("Player"))
+        if(other.gameObject.CompareTag("Player") && !isCollected)
         { 
             Player = other.gameObject;
             currentState = DroneState.HoverAroundPlayer;

@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        MeshCollider[] floorCollider = GameObject.FindWithTag("Floor").GetComponents<MeshCollider>();
+        rangeArena = floorCollider[0].bounds.extents.x;
         if(batteryCatchEvent != null)
         {
             batteryCatchEvent();

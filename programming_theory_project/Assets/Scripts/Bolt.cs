@@ -7,7 +7,7 @@ public class Bolt : Drone
     public Bolt()
     {
         massDrone = 0.06f; // in grams
-        totalFlightTime = 120.0f;
+        totalFlightTime = 90.0f;
 
     }
 

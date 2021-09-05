@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject[] dronePreFabs;
-    private float spawnRange = 5.0f;
+    public GameObject crazyfliePrefab;
+    public GameObject boltPrefab;
+    public GameObject batteryPrefab;
 
+    private float spawnRange = 5.0f;
     private float startDelay = 2;
     private float spawnInterval = 1.5f;
+
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("SpawnDrone", startDelay, spawnInterval);
-
+        UpdateSpawnRange();
+        InitiateSpawnDronesBatteries();
     }
 
     // Update is called once per frame
@@ -22,12 +25,39 @@ public class SpawnManager : MonoBehaviour
         
     }
 
-    void SpawnDrone()
+    void UpdateSpawnRange()
+    {
+        MeshCollider[] floorCollider = GameObject.FindWithTag("Floor").GetComponents<MeshCollider>();
+        spawnRange = floorCollider[0].bounds.extents.x;
+    }
+
+    void InitiateSpawnDronesBatteries()
+    {
+        InvokeRepeating("SpawnCrazyflie", startDelay, spawnInterval);
+        InvokeRepeating("SpawnBolt", startDelay, 5 * spawnInterval);
+        InvokeRepeating("SpawnBattery", startDelay, 5 * spawnInterval);
+    }
+
+    void SpawnBattery()
+    {
+        SpawnPrefab(batteryPrefab);
+    }
+
+    void SpawnCrazyflie()
+    {
+        SpawnPrefab(crazyfliePrefab);
+    }
+
+    void SpawnBolt()
+    {
+        SpawnPrefab(boltPrefab);
+    }
+
+    void SpawnPrefab(GameObject newPrefab)
     {
         Vector3 spawnPos = new Vector3(Random.Range(-spawnRange, spawnRange),
             0, Random.Range(-spawnRange, spawnRange));
-        int animalIndex = Random.Range(0, dronePreFabs.Length);
-        Instantiate(dronePreFabs[animalIndex], spawnPos,
-            dronePreFabs[animalIndex].transform.rotation); 
+        Instantiate(newPrefab, spawnPos,
+            newPrefab.transform.rotation); 
     }
 }
