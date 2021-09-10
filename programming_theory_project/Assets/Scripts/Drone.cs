@@ -63,7 +63,8 @@ public class Drone : MonoBehaviour
         HandleStateDrone();
     }
 
-//ABSTRACTION
+    // ABSTRACTION
+    // But I've implemented and refactored code throught the repo..
     void CommunicateChangeTotalAmountOfDrones(bool increase)
     {
         if(increase)
