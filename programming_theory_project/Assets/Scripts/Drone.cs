@@ -44,15 +44,9 @@ public class Drone : MonoBehaviour
     public bool isCollected = false;
     void Start()
     {
-        currentState = DroneState.TakeOff;
-        currentFlightTime = totalFlightTime;
-        takeOffSpeed = 0.02f / massDrone;
-        hoverOscillationSpeed = 0.16f/  massDrone;
-        randomizeValues();
-        amountOfDrones++;
+        IntializeDroneState();
         MainManager = GameObject.Find("MainManager");
-
-        MainManager.GetComponent<MainManager>().UpdateAmountOfDrones(amountOfDrones);
+        CommunicateChangeTotalAmountOfDrones(true);
         FindObjectOfType<PlayerController>().batteryCatchEvent += GotBattery;
 
     }
@@ -60,7 +54,42 @@ public class Drone : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        HandleStateDrone();
+    }
 
+    void CommunicateChangeTotalAmountOfDrones(bool increase)
+    {
+        if(increase)
+            amountOfDrones++;
+        else
+            amountOfDrones--;
+
+        MainManager.GetComponent<MainManager>().UpdateAmountOfDrones(amountOfDrones);
+    }
+
+    void CommunicateChangeAmountCollectedDrones(bool increase)
+    {
+        if(increase)
+            amountOfDronesCollected++;
+        else
+            amountOfDronesCollected--;
+
+        MainManager.GetComponent<MainManager>().UpdateAmountOfCollectedDrones(amountOfDronesCollected);
+    }
+
+
+    void IntializeDroneState()
+    {
+        currentState = DroneState.TakeOff;
+        currentFlightTime = totalFlightTime;
+        takeOffSpeed = 0.02f / massDrone;
+        hoverOscillationSpeed = 0.16f/  massDrone;
+        RandomizeValuesCircle();
+        
+    }
+
+    void HandleStateDrone()
+    {
         switch (currentState)
         {
             case DroneState.TakeOff:
@@ -85,15 +114,13 @@ public class Drone : MonoBehaviour
                 if(LandCommand())
                 {
                     
-                    amountOfDrones--;
-                    MainManager.GetComponent<MainManager>().UpdateAmountOfDrones(amountOfDrones);
+                    CommunicateChangeTotalAmountOfDrones(false);
                     if(isCollected)
                     {
-                        amountOfDronesCollected--;
                         isCollected = false;
-                        MainManager.GetComponent<MainManager>().UpdateAmountOfCollectedDrones(amountOfDronesCollected);
-                    }
+                        CommunicateChangeAmountCollectedDrones(false);
 
+                    }
                     Destroy(gameObject);
                 }
                 break;
@@ -101,7 +128,6 @@ public class Drone : MonoBehaviour
                 break;
 
         }
-
     }
 
     bool TakeOffCommand(float preferredHeight)
@@ -150,10 +176,8 @@ public class Drone : MonoBehaviour
         { 
             Player = other.gameObject;
             currentState = DroneState.HoverAroundPlayer;
-            amountOfDronesCollected++;
             isCollected = true;
-            MainManager.GetComponent<MainManager>().UpdateAmountOfCollectedDrones(amountOfDronesCollected);
-
+            CommunicateChangeAmountCollectedDrones(true);
         }
     }
 
@@ -165,11 +189,10 @@ public class Drone : MonoBehaviour
             float circleY = randomRadius*Mathf.Cos(currentPi);
             float height = randomHeight + 0.5f*Mathf.Sin(currentPiHeight);
             
-
             return new Vector3(circleX, height ,circleY);
     }
 
-    public void randomizeValues()
+    public void RandomizeValuesCircle()
     {
         randomPi = Random.Range(0, 2*Mathf.PI); 
         randomRadius = Random.Range(0.5f, 1.0f);

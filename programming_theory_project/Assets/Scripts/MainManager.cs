@@ -36,7 +36,7 @@ public class MainManager : MonoBehaviour
 
         Debug.Log(NameSaver.Instance.BestPlayerName);
 
-        amountOfDronesText.text = $"Amount of Drones on the Field : 0";
+        amountOfDronesText.text = $"Total Amount of Drones : 0";
         amountOfCollectedDronesText.text = $"Amount of Collected Drones : 0";
         averageFlightTimeText.text=  $"Average Flight Time Swarm : 0";
         PlayerNameText.text = "Player:  " + NameSaver.Instance.PlayerName;
@@ -120,7 +120,7 @@ public class MainManager : MonoBehaviour
 
     public void UpdateAmountOfDrones(int amountOfDrones)
     {
-        amountOfDronesText.text = $"Amount of Drones on the Field: {amountOfDrones}";
+        amountOfDronesText.text = $"Total Amount of Drones: {amountOfDrones}";
     }
 
     public void UpdateAmountOfCollectedDrones(int amountOfDrones)
