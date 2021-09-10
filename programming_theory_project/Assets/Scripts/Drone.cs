@@ -32,7 +32,11 @@ public class Drone : MonoBehaviour
     float randomHeight;
     float angleHeight;
     float circleSpeed =3.0f;
-    // Start is called before the first frame update
+
+    protected float innerCircleRand = 0.5f;
+    protected float outerCircleRand = 1.0f;
+    protected float minHeightRand = 0.5f;
+    protected float maxHeightRand = 1.0f;
 
     GameObject MainManager;
     
@@ -84,7 +88,7 @@ public class Drone : MonoBehaviour
         currentFlightTime = totalFlightTime;
         takeOffSpeed = 0.02f / massDrone;
         hoverOscillationSpeed = 0.16f/  massDrone;
-        RandomizeValuesCircle();
+        RandomizeValuesCircle(innerCircleRand, outerCircleRand, minHeightRand, maxHeightRand);
         
     }
 
@@ -192,11 +196,11 @@ public class Drone : MonoBehaviour
             return new Vector3(circleX, height ,circleY);
     }
 
-    public void RandomizeValuesCircle()
+    public void RandomizeValuesCircle(float innerCircle, float outerCircle, float minHeight, float maxHeight)
     {
         randomPi = Random.Range(0, 2*Mathf.PI); 
-        randomRadius = Random.Range(0.5f, 1.0f);
-        randomHeight = Random.Range(0.5f, 1.0f);
+        randomRadius = Random.Range(innerCircle, outerCircle);
+        randomHeight = Random.Range(minHeight, maxHeight);
         angleHeight = Random.Range(0, 2*Mathf.PI);
     }
     Vector3 GetCircleAroundPlayerPosition()

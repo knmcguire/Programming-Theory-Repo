@@ -8,6 +8,10 @@ public class Bolt : Drone
     {
         massDrone = 0.06f; // in grams
         totalFlightTime = 90.0f;
+        maxHeightRand = 1.5f;
+        minHeightRand = 0.5f;
+        innerCircleRand = 1.0f;
+        outerCircleRand = 1.5f;
 
     }
 
