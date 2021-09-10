@@ -8,6 +8,8 @@ public class Drone : MonoBehaviour
 
     protected float massDrone = 0.04f; // in grams
     protected float totalFlightTime = 600.0f; // in seconds
+
+    // ENCAPSULATION
     public float currentFlightTime {get; protected set;} // in seconds
 
     protected float flightHeight = 1.0f; // in meters
@@ -61,6 +63,7 @@ public class Drone : MonoBehaviour
         HandleStateDrone();
     }
 
+//ABSTRACTION
     void CommunicateChangeTotalAmountOfDrones(bool increase)
     {
         if(increase)

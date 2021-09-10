@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// INHERITANCE
 public class Bolt : Drone
 {
     public Bolt()
@@ -14,6 +15,8 @@ public class Bolt : Drone
         outerCircleRand = 1.5f;
 
     }
+
+    // Polymorphism
 
     protected override void HoverCommand(Vector3 startPosition)
     {
