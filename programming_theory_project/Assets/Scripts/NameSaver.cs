@@ -30,10 +30,8 @@ public class NameSaver : MonoBehaviour
     public void SavePlayerScore()
     {
         SaveData data = new SaveData();
-        Debug.Log("saving data");
         if (CurrentScore>HighScore)
         {
-            Debug.Log("highscore");
 
             BestPlayerName = PlayerName;
             HighScore = CurrentScore;
