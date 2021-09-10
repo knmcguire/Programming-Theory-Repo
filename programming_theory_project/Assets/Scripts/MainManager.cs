@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class MainManager : MonoBehaviour
 {
@@ -33,9 +35,6 @@ public class MainManager : MonoBehaviour
     {
 
         NameSaver.Instance.LoadPlayerScore();
-
-        Debug.Log(NameSaver.Instance.BestPlayerName);
-
         amountOfDronesText.text = $"Total Amount of Drones : 0";
         amountOfCollectedDronesText.text = $"Amount of Collected Drones : 0";
         averageFlightTimeText.text=  $"Average Flight Time Swarm : 0";
@@ -75,10 +74,15 @@ public class MainManager : MonoBehaviour
         BestScoreText.text = $"Best Score : {NameSaver.Instance.BestPlayerName} : {NameSaver.Instance.HighScore}";
     }
 
-    public void GoBack()
+
+    public void Exit()
     {
-        SceneManager.LoadScene("TitleScreen");
-    }
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit();
+#endif
+    }    
 
     public void UpdateAverageFlightTime()
     {
